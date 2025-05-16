@@ -1,0 +1,10 @@
+# Maven
+/target/
+
+# IDEs
+.idea/
+*.iml
+
+# Sistema
+.DS_Store
+.env

@@ -1,9 +1,0 @@
-com/example/similarproducts/client/ProductClient.class
-com/example/similarproducts/service/ProductService.class
-com/example/similarproducts/model/ProductDetail.class
-com/example/similarproducts/exception/GlobalExceptionHandler.class
-com/example/similarproducts/SimilarProductsApplication.class
-com/example/similarproducts/config/WebClientConfig.class
-com/example/similarproducts/client/ProductClient$1.class
-com/example/similarproducts/exception/ProductNotFoundException.class
-com/example/similarproducts/controller/ProductController.class
