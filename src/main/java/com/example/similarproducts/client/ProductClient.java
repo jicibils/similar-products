@@ -12,17 +12,22 @@ import java.util.List;
 @Component
 public class ProductClient {
 
+    private static final String BASE_URL = "http://localhost:3001";
+    private static final String SIMILAR_IDS_PATH = "/product/{productId}/similarids";
+    private static final String PRODUCT_DETAIL_PATH = "/product/{productId}";
+    private static final int NOT_FOUND_STATUS = 404;
+
     private final WebClient webClient;
 
     public ProductClient(WebClient.Builder builder) {
-        this.webClient = builder.baseUrl("http://localhost:3001").build();
+        this.webClient = builder.baseUrl(BASE_URL).build();
     }
 
     public List<String> getSimilarProductIds(String productId) {
         return webClient.get()
-                .uri("/product/{productId}/similarids", productId)
+                .uri(SIMILAR_IDS_PATH, productId)
                 .retrieve()
-                .onStatus(status -> status.value() == 404, 
+                .onStatus(status -> status.value() == NOT_FOUND_STATUS, 
                           response -> Mono.error(new ProductNotFoundException(productId)))
                 .bodyToMono(new ParameterizedTypeReference<List<String>>() {})
                 .block();
@@ -30,9 +35,9 @@ public class ProductClient {
 
     public ProductDetail getProductDetail(String productId) {
         return webClient.get()
-                .uri("/product/{productId}", productId)
+                .uri(PRODUCT_DETAIL_PATH, productId)
                 .retrieve()
-                .onStatus(status -> status.value() == 404, 
+                .onStatus(status -> status.value() == NOT_FOUND_STATUS, 
                           response -> Mono.error(new ProductNotFoundException(productId)))
                 .bodyToMono(ProductDetail.class)
                 .block();
