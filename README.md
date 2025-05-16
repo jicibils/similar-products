@@ -1,54 +1,54 @@
 # Similar Products API – Spring Boot 🚀
 
-Este proyecto expone un endpoint REST para obtener productos similares a uno dado, usando integraciones externas mockeadas.
+This project exposes a REST API endpoint to retrieve similar products for a given one, using mocked external integrations.
 
 ---
 
-## ✅ ¿Qué hace?
+## ✅ What it does
 
-1. Exponde:  
+1. Exposes:  
    `GET /product/{productId}/similar`
-2. Internamente llama a:
+2. Internally calls:
    - `GET /product/{productId}/similarids`
-   - `GET /product/{id}` por cada similar
-3. Devuelve:
-   - Array de objetos `ProductDetail`, filtrando los que no existen
+   - `GET /product/{id}` for each similar product
+3. Returns:
+   - An array of `ProductDetail` objects, filtering out non-existing ones
 
 ---
 
-## 🔧 Tecnologías utilizadas
+## 🔧 Tech Stack
 
 - Java 17
 - Spring Boot 3
-- WebClient (reactivo)
+- WebClient (reactive)
 - Maven
 - Docker
-- K6 + InfluxDB + Grafana (para tests de performance)
+- K6 + InfluxDB + Grafana (for performance tests)
 
 ---
 
-## 📁 Arquitectura del código
+## 📁 Project Architecture
 
-| Capa         | Rol                                            |
+| Layer        | Responsibility                                 |
 | ------------ | ---------------------------------------------- |
-| `controller` | Manejo de endpoints REST                       |
-| `service`    | Lógica de negocio                              |
-| `client`     | Llamadas a servicios externos (`WebClient`)    |
-| `model`      | DTOs de entrada/salida                         |
-| `exception`  | Manejo de errores como `404 Product Not Found` |
-| `config`     | Config global (`WebClient`, puertos, etc)      |
+| `controller` | REST API layer                                 |
+| `service`    | Business logic                                 |
+| `client`     | External service calls (`WebClient`)           |
+| `model`      | Input/output DTOs                              |
+| `exception`  | Error handling (e.g., `404 Product Not Found`) |
+| `config`     | Global config (`WebClient`, port, etc.)        |
 
 ---
 
-## 🚀 ¿Cómo correr el proyecto?
+## 🚀 How to Run the Project
 
-### 1. Levantar los mocks y servicios de test
+### 1. Start mocks and performance testing services
 
 ```bash
 docker-compose up -d simulado influxdb grafana
 ```
 
-Verificá que los mocks funcionen:
+Make sure mocks are running:
 
 ```bash
 curl http://localhost:3001/product/1/similarids
@@ -56,14 +56,14 @@ curl http://localhost:3001/product/1/similarids
 
 ---
 
-### 2. Correr la app
+### 2. Run the application
 
 ```bash
 mvn spring-boot:run
 ```
 
-Por defecto corre en el puerto `5000`.  
-Podés probarlo con:
+By default, the app runs on port `5000`.  
+You can test it using:
 
 ```bash
 curl http://localhost:5000/product/1/similar
@@ -71,35 +71,53 @@ curl http://localhost:5000/product/1/similar
 
 ---
 
-### 3. Correr los tests automáticos de rendimiento
+### 3. Run Performance Tests
 
-Desde la raíz del repo de los mocks (`backendDevTest`):
+Make sure the application is running, then run:
 
 ```bash
 docker-compose run --rm k6 run scripts/test.js
 ```
 
-📊 Ver resultados en Grafana:
+📊 View results in Grafana:
 
 👉 http://localhost:3000/d/Le2Ku9NMk/k6-performance-test
 
 ---
 
-## 🛡️ Manejo de errores
+## 🛡️ Error Handling
 
-- Si un producto similar no existe, se ignora
-- Si falla una llamada externa, no rompe la app
-- `404` controlado y resiliencia total
-
----
-
-## 📌 Notas
-
-- Compatible con macOS, Linux y Windows
-- No se requiere Base de Datos
-- `WebClient` está configurado con `host.docker.internal` para funcionar bien con Docker
-- La app es robusta ante fallos de servicios externos
+- If a similar product is not found, it is skipped
+- External service failures are gracefully handled
+- `404` responses are properly managed with resilience in mind
 
 ---
 
-Desarrollado con 💪 por Juan Ignacio Cibils
+### 🧪 Unit Testing
+
+The project includes a basic unit test for the core service logic:
+
+- `ProductServiceTest.java`: verifies the logic for retrieving similar products using mocked dependencies.
+
+#### 📦 How to run the tests
+
+From the root directory of the project:
+
+```bash
+mvn test
+```
+
+This will run all unit tests inside `src/test/java`.
+
+---
+
+## 📌 Notes
+
+- Compatible with macOS, Linux, and Windows
+- No database required
+- `WebClient` is configured to work properly with Docker via `host.docker.internal`
+- The app is resilient to external service failures
+
+---
+
+Crafted by Juan Ignacio Cibils
